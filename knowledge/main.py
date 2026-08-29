@@ -2,6 +2,7 @@ from chunking import chunk_text
 from embeddings import EmbeddingModel
 from vector_store import *
 from generator import build_prompt
+from chunking import recursive_chunk, add_overlap
 from llm import LLM
 # 1. Load Document
 with open('./data/document.txt','r') as file:
@@ -47,3 +48,20 @@ prompt = build_prompt(
 # Call LLM
 response = LLM.generate(LLM,prompt)
 print(response)
+
+chunks = recursive_chunk(
+    document,
+    chunk_size=300
+)
+chunks = add_overlap(
+    chunks,
+    overlap=50
+)
+for i, chunk in enumerate(chunks):
+    print(f"\n{'=' * 50}")
+    print(f"CHUNK {i}")
+    print(f"{'=' * 50}")
+
+    print(chunk)
+
+    print("\nLength:", len(chunk))
