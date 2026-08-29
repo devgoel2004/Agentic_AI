@@ -1,0 +1,14 @@
+Artificial Intelligence is transforming the technology industry.
+Machine learning allows computers to learn patterns from data.
+Deep learning uses neural networks with multiple layers.
+
+Retrieval Augmented Generation, commonly called RAG, combines
+information retrieval with large language models. Instead of relying
+only on the knowledge stored inside an LLM, RAG retrieves relevant
+external information before generating an answer.
+
+Embeddings convert text into numerical vectors. These vectors capture
+semantic meaning, allowing systems to find similar pieces of text.
+
+Vector databases store embeddings and enable efficient similarity
+search across millions of vectors.
