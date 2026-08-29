@@ -1,6 +1,8 @@
 from chunking import chunk_text
 from embeddings import EmbeddingModel
 from vector_store import *
+from generator import build_prompt
+from llm import LLM
 # 1. Load Document
 with open('./data/document.txt','r') as file:
     document = file.read()
@@ -22,7 +24,7 @@ vector_store.add(
 )
 
 # 5. User Query
-query = "What does RAG do?"
+query = "What is the capital of India?"
 
 # 6. Embed Query
 query_embedding = (
@@ -35,9 +37,13 @@ results = vector_store.search(
     top_k = 2
 )
 
-# 8. Print Results
+# 8. Build Augmented Prompt
+prompt = build_prompt(
+    query,
+    results
+)
 
-for result in results:
-    print(f'\n Similarity Score: {result['score']}')
-    print("Document")
-    print(result['document'])
+
+# Call LLM
+response = LLM.generate(LLM,prompt)
+print(response)
