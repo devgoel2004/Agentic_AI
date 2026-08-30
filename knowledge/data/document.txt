@@ -1,14 +1,14 @@
-Artificial Intelligence is transforming the technology industry.
-Machine learning allows computers to learn patterns from data.
-Deep learning uses neural networks with multiple layers.
+Artificial Intelligence is transforming modern technology. 
+Companies use AI to automate repetitive tasks and improve decision making.
 
-Retrieval Augmented Generation, commonly called RAG, combines
-information retrieval with large language models. Instead of relying
-only on the knowledge stored inside an LLM, RAG retrieves relevant
-external information before generating an answer.
+Machine Learning is a subset of Artificial Intelligence.
+Machine Learning allows computers to learn patterns from data.
+It is widely used in recommendation systems and fraud detection.
 
-Embeddings convert text into numerical vectors. These vectors capture
-semantic meaning, allowing systems to find similar pieces of text.
+Deep Learning is a subset of Machine Learning.
+Deep Learning uses neural networks with multiple layers.
+It powers modern applications such as image recognition and language models.
 
-Vector databases store embeddings and enable efficient similarity
-search across millions of vectors.
+Vector databases store high-dimensional embeddings.
+They help applications perform efficient similarity searches.
+Vector databases are an important component of modern RAG systems.
