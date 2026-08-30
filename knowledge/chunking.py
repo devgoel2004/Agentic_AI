@@ -225,3 +225,13 @@ def add_overlap(chunks, overlap = 50):
             )
             overlapped_chunks.append(new_chunk)
     return overlapped_chunks
+
+def token_chunk(text, tokenizer, chunk_size = 100):
+    tokens = tokenizer.encode(text)
+    chunks = []
+    for i in range(0,len(tokens), chunk_size):
+        chunks_token = tokens[i: i + chunk_size]
+        chunk_text= tokenizer.decode(chunks_token)
+        chunks.append(chunk_text)
+
+    return chunks
