@@ -2,8 +2,9 @@ from chunking import chunk_text
 from embeddings import EmbeddingModel
 from vector_store import *
 from generator import build_prompt
-from chunking import recursive_split, add_overlap
+from chunking import recursive_split, add_overlap, recursive_token_chunk
 from llm import LLM
+from transformers import AutoTokenizer
 # 1. Load Document
 with open('./data/document.txt','r') as file:
     document = file.read()
@@ -24,6 +25,9 @@ vector_store.add(
     document_embeddings
 )
 
+tokenizer = AutoTokenizer.from_pretrained(
+    "sentence-transformers/all-MiniLM-L6-v2"
+)
 # 5. User Query
 query = "What is the capital of India?"
 
@@ -57,7 +61,7 @@ separators = [
     ""
 ]
 
-chunks = recursive_split(text=document, separators=separators, chunk_size=150, chunk_overlap=40)
+chunks = recursive_token_chunk(text=document, tokenizer = tokenizer, separators=separators, chunk_size=150, chunk_overlap=40)
 for i, chunk in enumerate(chunks):
     print("\n" + "=" * 50)
     print(f"CHUNK {i + 1}")

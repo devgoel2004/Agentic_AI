@@ -1,3 +1,4 @@
+# 1. character Based Chunking
 def chunk_text(text, chunk_size = 200, overlap = 50):
     if(overlap >= chunk_size):
         raise ValueError(
@@ -24,6 +25,7 @@ def split_by_separator(text, separator):
         return list(text)
     return text.split(separator)
 
+#2. Recursive Based Chunking
 def merge_splits(
     splits,
     separator,
@@ -31,7 +33,6 @@ def merge_splits(
     chunk_overlap
 ):
     chunks = []
-
     current_chunk = []
     current_length = 0
 
@@ -226,6 +227,7 @@ def add_overlap(chunks, overlap = 50):
             overlapped_chunks.append(new_chunk)
     return overlapped_chunks
 
+# 3. Token Based Chunking
 def token_chunk(text, tokenizer, chunk_size = 100):
     tokens = tokenizer.encode(text)
     chunks = []
@@ -235,3 +237,172 @@ def token_chunk(text, tokenizer, chunk_size = 100):
         chunks.append(chunk_text)
 
     return chunks
+def token_count(text, tokenizer):
+    return len(tokenizer.encode(text))
+
+# 4. Token based Recursive Chunking
+def merge_splits_token(
+    splits,
+    separator,
+    chunk_size,
+    tokenizer
+):
+    chunks = []
+    current_chunk = ""
+
+    for split in splits:
+
+        if current_chunk:
+            candidate = (
+                current_chunk
+                + separator
+                + split
+            )
+        else:
+            candidate = split
+
+        if token_count(candidate, tokenizer) <= chunk_size:
+            current_chunk = candidate
+
+        else:
+            if current_chunk:
+                chunks.append(current_chunk)
+
+            current_chunk = split
+
+    if current_chunk:
+        chunks.append(current_chunk)
+
+    return chunks
+
+
+def recursive_token_chunk(
+    text,
+    tokenizer,
+    separators=None,
+    chunk_size=300,
+    chunk_overlap=0
+):
+    if not text:
+        return []
+
+    # Check token count
+    if token_count(text, tokenizer) <= chunk_size:
+        return [text.strip()]
+
+    # Default separators
+    if separators is None:
+        separators = [
+            "\n\n",
+            "\n",
+            ". ",
+            " ",
+            ""
+        ]
+
+    # No separators left
+    if not separators:
+
+        tokens = tokenizer.encode(text)
+
+        chunks = []
+
+        step = chunk_size - chunk_overlap
+
+        for i in range(
+            0,
+            len(tokens),
+            step
+        ):
+            chunk_tokens = tokens[
+                i:i + chunk_size
+            ]
+
+            chunks.append(
+                tokenizer.decode(chunk_tokens)
+            )
+
+        return chunks
+
+    separator = separators[0]
+
+    # Special case for character/token fallback
+    if separator == "":
+        tokens = tokenizer.encode(text)
+
+        chunks = []
+
+        step = chunk_size - chunk_overlap
+
+        for i in range(
+            0,
+            len(tokens),
+            step
+        ):
+            chunk_tokens = tokens[
+                i:i + chunk_size
+            ]
+
+            chunks.append(
+                tokenizer.decode(chunk_tokens)
+            )
+
+        return chunks
+
+    splits = text.split(separator)
+
+    final_chunks = []
+    small_splits = []
+
+    for split in splits:
+
+        split = split.strip()
+
+        if not split:
+            continue
+
+        # Check using TOKENS
+        if token_count(split, tokenizer) <= chunk_size:
+
+            small_splits.append(split)
+
+        else:
+
+            # Merge previous small splits
+            if small_splits:
+
+                merged = merge_splits_token(
+                    small_splits,
+                    separator,
+                    chunk_size,
+                    tokenizer
+                )
+
+                final_chunks.extend(merged)
+
+                small_splits = []
+
+            # Recursive call
+            smaller_chunks = recursive_token_chunk(
+                text=split,
+                tokenizer=tokenizer,
+                separators=separators[1:],
+                chunk_size=chunk_size,
+                chunk_overlap=chunk_overlap
+            )
+
+            final_chunks.extend(smaller_chunks)
+
+    # Merge remaining pieces
+    if small_splits:
+
+        merged = merge_splits_token(
+            small_splits,
+            separator,
+            chunk_size,
+            tokenizer
+        )
+
+        final_chunks.extend(merged)
+
+    return final_chunks
