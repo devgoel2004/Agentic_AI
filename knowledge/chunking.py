@@ -406,3 +406,20 @@ def recursive_token_chunk(
         final_chunks.extend(merged)
 
     return final_chunks
+
+# 5. Token based chunk overlap
+def token_chunk_with_overlap(text, tokenizer, chunk_size = 100, overlap = 20):
+    tokens = tokenizer.encode(text)
+    chunks = []
+    if(overlap >= chunk_size):
+        raise ValueError("Overlap should be less than chunk_size")
+    step = chunk_size - overlap
+    for i in range(0, len(tokens), step):
+        chunk_tokens = tokens[i: i+ chunk_size]
+        if not chunk_tokens:
+            break
+        chunk_text = tokenizer.decode(chunk_tokens)
+        chunks.append(chunk_text)
+        if i + chunk_size >= len(tokens):
+            break
+    return chunks

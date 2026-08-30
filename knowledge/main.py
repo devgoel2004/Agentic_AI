@@ -2,7 +2,7 @@ from chunking import chunk_text
 from embeddings import EmbeddingModel
 from vector_store import *
 from generator import build_prompt
-from chunking import recursive_split, add_overlap, recursive_token_chunk
+from chunking import recursive_split, add_overlap, recursive_token_chunk, token_chunk_with_overlap
 from llm import LLM
 from transformers import AutoTokenizer
 # 1. Load Document
@@ -61,7 +61,7 @@ separators = [
     ""
 ]
 
-chunks = recursive_token_chunk(text=document, tokenizer = tokenizer, separators=separators, chunk_size=150, chunk_overlap=40)
+chunks = token_chunk_with_overlap(text=document, tokenizer = tokenizer, chunk_size=500, chunk_overlap=40)
 for i, chunk in enumerate(chunks):
     print("\n" + "=" * 50)
     print(f"CHUNK {i + 1}")
