@@ -1,3 +1,6 @@
+from sentence_transformers import SentenceTransformer
+from sentence_transformers.util import cos_sim
+
 # 1. character Based Chunking
 def chunk_text(text, chunk_size = 200, overlap = 50):
     if(overlap >= chunk_size):
@@ -422,4 +425,36 @@ def token_chunk_with_overlap(text, tokenizer, chunk_size = 100, overlap = 20):
         chunks.append(chunk_text)
         if i + chunk_size >= len(tokens):
             break
+    return chunks
+
+# Semantic Chunking
+model = SentenceTransformer(
+    "all-MiniLM-L6-v2"
+)
+def semantic_chunk(text, threshold=0.5):
+    sentences = [
+        sentence.strip()
+        for sentence in text.split(".")
+        if sentence.strip()
+    ]
+    if not sentences:
+        return []
+    embeddings = model.encode(sentences)
+    similarities = []
+    for i in range(len(sentences) - 1):
+        similarity = cos_sim(
+            embeddings[i],
+            embeddings[i + 1]
+        ).item()
+        similarities.append(similarity)
+    chunks = []
+    current_chunk = [sentences[0]]
+    for i, similarity in enumerate(similarities):
+        next_sentence = sentences[i + 1]
+        if similarity < threshold:
+            chunks.append(" ".join(current_chunk))
+            current_chunk = [next_sentence]
+        else:
+            current_chunk.append(next_sentence)
+    chunks.append(" ".join(current_chunk))
     return chunks
