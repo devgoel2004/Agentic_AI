@@ -1,6 +1,6 @@
 from sentence_transformers import SentenceTransformer
 from sentence_transformers.util import cos_sim
-
+import numpy as np
 # 1. character Based Chunking
 def chunk_text(text, chunk_size = 200, overlap = 50):
     if(overlap >= chunk_size):
@@ -431,7 +431,7 @@ def token_chunk_with_overlap(text, tokenizer, chunk_size = 100, overlap = 20):
 model = SentenceTransformer(
     "all-MiniLM-L6-v2"
 )
-def semantic_chunk(text, threshold=0.5):
+def semantic_chunk(text, percentile = 20):
     sentences = [
         sentence.strip()
         for sentence in text.split(".")
@@ -447,11 +447,12 @@ def semantic_chunk(text, threshold=0.5):
             embeddings[i + 1]
         ).item()
         similarities.append(similarity)
+    breakpoint = np.percentile(similarities, percentile)
     chunks = []
     current_chunk = [sentences[0]]
     for i, similarity in enumerate(similarities):
         next_sentence = sentences[i + 1]
-        if similarity < threshold:
+        if similarity < breakpoint:
             chunks.append(" ".join(current_chunk))
             current_chunk = [next_sentence]
         else:

@@ -67,7 +67,7 @@ separators = [
 # chunks = token_chunk_with_overlap(text=document, tokenizer = tokenizer, chunk_size=500, chunk_overlap=40)
 
 # Semantic Chunking
-chunks = semantic_chunk(text=document1,threshold=0.5)
+chunks = semantic_chunk(text=document1,percentile=20)
 for chunk in chunks:
     print(chunk)
     print("-"*50)
