@@ -459,3 +459,30 @@ def semantic_chunk(text, percentile = 20):
             current_chunk.append(next_sentence)
     chunks.append(" ".join(current_chunk))
     return chunks
+
+
+# Sliding Window based chunking
+def create_windows(sentences, window_size = 3):
+    windows = []
+    for i in range(
+        len(sentences) - window_size + 1
+    ):
+        window = " ".join(
+            sentences[i: i + window_size]
+        )
+        windows.append(window)
+
+    return windows
+
+def create_context_windows(sentences, window_size = 2):
+    comparisons = []
+    for i in range(window_size, len(sentences) - window_size):
+        left_context = " ".join(sentences[i-window_size : i])
+        right_context = " ".join(sentences[i:i+window_size])  
+        comparisons.append({
+            "position":i,
+            "left":left_context,
+            "right":right_context
+        })
+        return comparisons
+    
