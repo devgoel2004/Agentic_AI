@@ -1,0 +1,12 @@
+import math
+def consine_similarity(vector_a, vector_b):
+    dot_product = sum(
+        a*b
+        for a, b in zip(vector_a, vector_b)
+    )
+    magnitude_a = math.sqrt(sum(a**2 for a in vector_a))
+    magnitude_b = math.sqrt(sum(b**2 for b in vector_b))
+    if magnitude_a == 0 or magnitude_b == 0:
+        return 0
+    similarity = dot_product / (magnitude_a * magnitude_b)
+    return similarity

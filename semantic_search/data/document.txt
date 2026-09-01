@@ -1,0 +1,5 @@
+Python is commonly used for web development and automation.
+JavaScript is used to build interactive web applications.
+Machine learning allows computers to learn from data.
+PostgreSQL is a relational database management system.
+Pizza is a popular Italian food.
