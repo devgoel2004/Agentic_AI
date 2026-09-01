@@ -2,8 +2,14 @@ import chromadb
 
 class ChromaVectorStore:
     def __init__(self, path: str, collection_name : str):
-        self.client = chromadb.PersistentClient(path=path)
-        self.collection = self.client.create_collection(name=collection_name)
+        self.client = chromadb.PersistentClient(
+            path=path
+        )
+        self.collection = (
+            self.client.get_or_create_collection(
+                name=collection_name
+            )
+        )
 
     def upsert(self, ids, documents, embeddings, metadatas):
         self.collection.upsert(

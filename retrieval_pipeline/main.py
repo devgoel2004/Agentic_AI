@@ -34,7 +34,6 @@ embedding_model = EmbeddingModel()
 vector_store = ChromaVectorStore(
     collection_name = COLLECTION_NAME,
     path = str(CHROMA_PATH),
-    collection_name = COLLECTION_NAME
 )
 
 ingestion_service = DocumentIngestionService(
